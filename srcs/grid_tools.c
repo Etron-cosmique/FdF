@@ -6,7 +6,7 @@
 /*   By: clvicent <clvicent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 17:23:10 by clvicent          #+#    #+#             */
-/*   Updated: 2023/02/13 16:42:16 by clvicent         ###   ########.fr       */
+/*   Updated: 2023/02/13 17:06:03 by clvicent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ void	l_c_size(t_fdf *f)
 		f->l.half_width = f->l.half_height * 2;
 }
 #endif
+
 int	width_and_length(t_fdf *f)
 {
 	char	*line;
