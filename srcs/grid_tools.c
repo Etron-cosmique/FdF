@@ -6,7 +6,7 @@
 /*   By: clvicent <clvicent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 17:23:10 by clvicent          #+#    #+#             */
-/*   Updated: 2023/02/13 17:06:03 by clvicent         ###   ########.fr       */
+/*   Updated: 2023/02/16 14:56:21 by clvicent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,82 +29,75 @@ void	ft_grid(t_fdf *f)
 		}	
 		x++;
 	}
-	free_tab(f->tab, f->m.size_y);
 }
 
 int	is_in_grid(int x, int y, t_fdf *f)
 {
-	if (x < f->m.start_x || x > (f->scx + 1 - f->m.start_x) ||
-		y < f->m.start_y || y > (f->scy + 1 - f->m.start_y))
+	if (x < f->m.start_x || x > (f->scx + 1 - f->m.start_x)
+		|| y < f->m.start_y || y > (f->scy + 1 - f->m.start_y))
 		return (0);
-	if (((y - f->m.start_y) % f->m.size_p_y == 0) &&
-		((x - f->m.start_x) % f->m.size_p_x == 0))
+	if (((y - f->m.start_y) % f->m.size_p_y == 0)
+		&& ((x - f->m.start_x) % f->m.size_p_x == 0))
 		return (OK);
 	if (x == (f->scx - f->m.start_x) && y == (f->scy - f->m.start_y))
 		return (END);
 	return (0);
 }
 
-#if 0
 void	l_c_size(t_fdf *f)
 {
+	int	delta;
+
+	delta = f->m.size_x + f->m.size_y - 2;
 	f->m.size_p_x = (f->scx - 1) / f->m.size_x;
 	f->m.size_p_y = (f->scy - 1) / f->m.size_y;
 	if (f->m.size_p_x > f->m.size_p_y)
 		f->m.size_p_x = f->m.size_p_y;
 	else
 		f->m.size_p_y = f->m.size_p_x;
-}
-#else
-void	l_c_size(t_fdf *f)
-{
-	int delta;
-
-	delta = f->m.size_x + f->m.size_y;
-	f->l.half_height = (f->scx - (f->scx / 10)) / delta;
-	f->l.half_width = (f->scy - (f->scy / 10)) / delta;
+	f->l.half_width = (f->scx - f->scx / 25) / delta;
+	f->l.half_height = (f->scy - f->scy / 25) / delta;
 	if (f->l.half_height * 2 > f->l.half_width)
 		f->l.half_height = f->l.half_width / 2;
 	else
 		f->l.half_width = f->l.half_height * 2;
 }
-#endif
 
-int	width_and_length(t_fdf *f)
+int	width_and_length(t_fdf *f, char *file)
 {
 	char	*line;
+	char	**tmp;
+	int		y;
 
+	f->m.size_y = get_file_len(file);
+	f->fd = open(file, O_RDONLY);
 	line = NULL;
-	LOG
-	f->str = get_next_line(f->fd);
-	if (f->str == NULL)
-		return (-1);
-	else
-		f->m.size_y = 1;
-	f->m.size_x = get_n_col(f->str);
-	while (1)
+	y = 0;
+	while (y < f->m.size_y)
 	{
 		line = get_next_line(f->fd);
-		if (line == NULL || input_checker(line) == 1)
-			return (0);
-		f->m.size_y++;
-		if (f->m.size_x != get_n_col(line))
+		if (line == NULL)
+			return (close(f->fd));
+		tmp = ft_split(line, ' ');
+		if (wl_util(f, tmp, line, y) == -1)
 			return (-1);
-		f->str = ft_strjoin(f->str, line);
+		tab_filler(f->tab, tmp, y);
 		free(line);
+		ft_exit(tmp);
+		y++;
 	}
+	close_gnl(f->fd);
 	return (0);
 }
 
-int	get_n_col(char *str)
+int	get_n_col(char **str)
 {
 	int		i;
-	char	**strs;
 
 	i = 0;
-	strs = ft_split(str, ' ');
-	while (strs[i])
+	if (!str)
+		return (-1);
+	while (str[i])
 		i++;
-	ft_exit(strs);
 	return (i);
 }

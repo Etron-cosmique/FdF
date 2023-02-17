@@ -1,23 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   _ft_get_char.c                                     :+:      :+:    :+:   */
+/*   _printab.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clvicent <clvicent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/30 14:33:31 by clvicent          #+#    #+#             */
-/*   Updated: 2023/02/16 14:35:20 by clvicent         ###   ########.fr       */
+/*   Created: 2023/02/14 17:59:20 by clvicent          #+#    #+#             */
+/*   Updated: 2023/02/16 14:36:10 by clvicent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_get_char(const char *s, char c)
+void	printab(int **tab, int ylen, int xlen)
 {
-	int	i;
+	int	x;
+	int	y;
 
-	i = 0;
-	while (s[i] != c && s[i])
-		i++;
-	return (i);
+	x = 0;
+	y = 0;
+	while (y < ylen)
+	{
+		x = 0;
+		while (x < xlen)
+		{
+			ft_putnbr_fd(tab[y][x], 1);
+			ft_putchar(' ');
+			x++;
+		}
+		y++;
+		ft_putchar('\n');
+	}
 }

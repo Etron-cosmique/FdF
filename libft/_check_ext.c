@@ -1,23 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   _ft_get_char.c                                     :+:      :+:    :+:   */
+/*   _check_ext.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clvicent <clvicent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/30 14:33:31 by clvicent          #+#    #+#             */
-/*   Updated: 2023/02/16 14:35:20 by clvicent         ###   ########.fr       */
+/*   Created: 2023/02/16 15:42:50 by clvicent          #+#    #+#             */
+/*   Updated: 2023/02/16 16:07:16 by clvicent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_get_char(const char *s, char c)
+int	check_ext(char *str, char *ext)
 {
 	int	i;
+	int	j;
 
-	i = 0;
-	while (s[i] != c && s[i])
+	i = ft_strlen(str) - ft_strlen(ext);
+	j = 0;
+	if (i <= 0)
+		return (-1);
+	while (str[i] && ext[j])
+	{
+		if (str[i] != ext[j])
+			return (-1);
 		i++;
-	return (i);
+		j++;
+	}
+	return (1);
 }
+

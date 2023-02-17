@@ -6,7 +6,7 @@
 /*   By: clvicent <clvicent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/08 14:22:53 by clvicent          #+#    #+#             */
-/*   Updated: 2023/02/09 14:06:16 by clvicent         ###   ########.fr       */
+/*   Updated: 2023/02/17 12:03:45 by clvicent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,11 @@ void	draw_grid(int x, int y, t_fdf *f)
 void	get_coord(int x, int y, t_fdf *f)
 {
 	f->m.next_alt = f->tab[y][x];
-	f->l.x0 = f->l.true_x + ((f->m.index_x - f->m.index_y) * f->l.half_height);
-	f->l.y0 = f->l.true_y + ((f->m.index_x + f->m.index_y) * f->l.half_width);
+	f->l.x0 = f->l.true_x + ((f->m.index_x - f->m.index_y) * f->l.half_width);
+	f->l.y0 = f->l.true_y + ((f->m.index_x + f->m.index_y) * f->l.half_height);
 	f->l.y0 -= f->l.zoom * f->m.c_alt;
-	f->l.x1 = f->l.true_x + ((x - y) * f->l.half_height);
-	f->l.y1 = f->l.true_y + ((x + y) * f->l.half_width);
+	f->l.x1 = f->l.true_x + ((x - y) * f->l.half_width);
+	f->l.y1 = f->l.true_y + ((x + y) * f->l.half_height);
 	f->l.y1 -= f->l.zoom * f->m.next_alt;
 }
 
@@ -58,18 +58,20 @@ void	bresenham(t_fdf *f)
 		f->l.sy = 1;
 	else
 		f->l.sy = -1;
+	f->l.seg_len = get_len(f);
 	draw_line(f, &f->l);
 }
 
 void	draw_line(t_fdf *f, t_line *l)
 {
 	int	er;
-	
+
 	er = l->dx + l->dy;
 	while (1)
 	{
-		if (l->x0 < f->scx && l->y0 < f->scy)
-			my_mlx_pixel_put(&f->img, l->x0, l->y0, 0xFFFFFF);
+		if (l->x0 < f->scx && l->y0 < f->scy
+			&& l->x0 >= 0 && l->y0 >= 0)
+			set_pix(f, l->x0, l->y0);
 		if (l->x0 == l->x1 && l->y0 == l->y1)
 			break ;
 		if (2 * er >= l->dy)
@@ -87,4 +89,23 @@ void	draw_line(t_fdf *f, t_line *l)
 			l->y0 += l->sy;
 		}
 	}
+}
+
+int	get_len(t_fdf *f)
+{
+	float	a;
+	float	b;
+	float	c;
+
+	if (f->l.x1 > f->l.x0)
+		a = f->l.x1 - f->l.x0;
+	else
+		a = f->l.x0 - f->l.x1;
+	if (f->l.y1 * f->l.zoom > f->l.y0 * f->l.zoom)
+		b = f->l.y1 * f->l.zoom - f->l.y0 * f->l.zoom;
+	else
+		b = f->l.y0 * f->l.zoom - f->l.y1 * f->l.zoom;
+	c = a * a + b * b;
+	c = sqrt((double)c);
+	return ((int)c);
 }

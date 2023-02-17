@@ -1,23 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   _ft_get_char.c                                     :+:      :+:    :+:   */
+/*   _ft_putstrs_fd.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clvicent <clvicent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/30 14:33:31 by clvicent          #+#    #+#             */
-/*   Updated: 2023/02/16 14:35:20 by clvicent         ###   ########.fr       */
+/*   Created: 2023/02/14 16:45:00 by clvicent          #+#    #+#             */
+/*   Updated: 2023/02/16 14:30:09 by clvicent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_get_char(const char *s, char c)
+int	ft_putstrs_fd(char **strs, int fd)
 {
 	int	i;
 
 	i = 0;
-	while (s[i] != c && s[i])
+	if (!strs || fd < 0 || fd > 1024)
+		return (-1);
+	while (strs[i] != 0)
+	{
+		ft_putstr_fd(strs[i], fd);
+		ft_putchar_fd('\n', fd);
 		i++;
+	}
 	return (i);
 }
